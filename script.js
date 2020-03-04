@@ -33,7 +33,7 @@ var interval = setInterval(renderTable, 60000);
 
 function renderTable() {
   var currentDate = moment().format("dddd, MMMM Do") // Get current date. 
-  var currentTime = moment().format("H:mm a") ; // Get current time.
+  var currentTime = moment().format("hh:mm A") ; // Get current time.
   var TimeNow = moment();
   $("#currentDay").text("Date: "+currentDate+" Time: "+currentTime); // Display current date and time.
   timeBlockElements.each(function(i) {
