@@ -32,14 +32,15 @@ var interval = setInterval(renderTable, 60000);
 // attribute, then passing those two objects to the checkTime object that returns the class name to be added to the element.
 
 function renderTable() {
-  var currentDate = moment().format("dddd, MMMM Do"); // Get current date by creating new moment.js object and call format() method on it.
-  var currentTime = moment();
-  $("#currentDay").text(currentDate); // Select #currentDay element and set text to currentDate.
+  var currentDate = moment().format("dddd, MMMM Do") // Get current date. 
+  var currentTime = moment().format("H:mm a") ; // Get current time.
+  var TimeNow = moment();
+  $("#currentDay").text("Date: "+currentDate+" Time: "+currentTime); // Display current date and time.
   timeBlockElements.each(function(i) {
     var dataIndex = $(timeBlockElements[i]).attr("data-index");
-    var timeBlock = moment(dataIndex, "HH-mma");
+    var timeBlock = moment(dataIndex, "HH-mm a");
     $(timeBlockElements[i]).removeClass("past present future");
-    $(timeBlockElements[i]).addClass(checkTime(timeBlock, currentTime));
+    $(timeBlockElements[i]).addClass(checkTime(timeBlock, TimeNow));
   });
 }
 
