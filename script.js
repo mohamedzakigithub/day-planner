@@ -1,69 +1,71 @@
-// Attempt to load tasks object from local storage or return an empty object if no locally stored object is found. 
+// Select time blocks DOM elements using class (description).
+
+var timeBlockElements = $(".description");
+
+// Attempt to load tasks object from local storage or assign it to an empty object if no locally stored version found.
+
 var tasks = JSON.parse(localStorage.getItem("tasks")) || {};
-// set interval to display data every one minuit. 
-var interval = setInterval(displayData, 60000);
-// call displayData function when the page loads. 
-displayData();
 
-// displayData function checks the current time and compares it to the end of working day time (6 PM) and displays todays
-// date into the current date element and calls the renderTable function or display a message and clear the Interval.
+// Populate time blocks values from the locally stored object if there is a stored value for each time block.
 
-function displayData() {
-  var dateTime = moment();
-  var dayEnd = moment("06:00 PM", "HH-mma");
-  if (dateTime.isAfter(dayEnd)) {
-    $("#currentDay").text("Working hours ended");
-    renderTable();
-    clearInterval(interval);
-  } else {
-    $("#currentDay").text(dateTime.format("dddd, MMMM Do"));
-    renderTable();
+timeBlockElements.each(function(i) {
+  var dataIndex = $(timeBlockElements[i]).attr("data-index");
+  if (tasks[dataIndex]) {
+    $(timeBlockElements[i]).val(tasks[dataIndex]);
   }
-}
+});
 
-// The renderTable function select all the text input elements with a class of description and checks for the presence 
-// of a key in the tasks object retrieved from local storage and used using the data-index attribute of each selected element
-// and sets the value to that item. The function then sets the time block color by setting the class (past, present or future)
-// by calling the checkTime function. 
+// Call the renderTable function on page load.
+
+renderTable();
+
+// Set a timer and assign the renderTable function as a call back function to be called every minute to ensure correct color
+// representation of each time block in real time.
+
+var interval = setInterval(renderTable, 60000);
+
+// The renderTable function is responsible for displaying the current date on the top of the page and setting the class 
+// which formats the color of the time block representing it's current time state compared to the current time.
+// This is done by clearing the classes then adding the class which represents the time block status now from 
+// ( past, present and future). This is achieved by creating a moment.js object representing the current time then 
+// creating a new moment.js object representing the time assigned to the time block which is stored in the data-index 
+// attribute, then passing those two objects to the checkTime object that returns the class name to be added to the element.
 
 function renderTable() {
-  var timeBlocks = $(".description");
-  timeBlocks.each(function(i) {
-    var dataIndex = $(timeBlocks[i]).attr("data-index");
-    if (tasks[dataIndex]) {
-      $(timeBlocks[i]).val(tasks[dataIndex]);
-    }
-    $(timeBlocks[i]).removeClass( "past present future" )
-    $(timeBlocks[i]).addClass(checkTime(dataIndex));
+  var currentDate = moment().format("dddd, MMMM Do"); // Get current date by creating new moment.js object and call format() method on it.
+  var currentTime = moment();
+  $("#currentDay").text(currentDate); // Select #currentDay element and set text to currentDate.
+  timeBlockElements.each(function(i) {
+    var dataIndex = $(timeBlockElements[i]).attr("data-index");
+    var timeBlock = moment(dataIndex, "HH-mma");
+    $(timeBlockElements[i]).removeClass("past present future");
+    $(timeBlockElements[i]).addClass(checkTime(timeBlock, currentTime));
   });
 }
 
-// The check time function is called by the renderTable function on each text input element. 
-// The function compares the time value of the div to the hours of the current time by parsing the data-index 
-// value to a monemnt,js object and setting the format to ("HH-mma"). The output of the subtraction operation
-// is then examined and a switch case statement is used to return a string to be used as a class to change the 
-// color of the time block.
+// The checkTime function is called by the renderTable function on each text input element.
+// The function compares two moment.js objects by using the duration() method chained with asHours() method
+// to return the time difference in hours between the two objects. The function then uses a switch case statement to return
+// either (past, present or future).
 
-function checkTime(timeBlock) {
-  var currentHour = moment().hours();
-  var timeBlockHour = moment(timeBlock, "HH-mma").hours();
-  var timeDiff = timeBlockHour - currentHour;
+function checkTime(time1, time2) {
+  var timeDiff = moment.duration(time2.diff(time1)).asHours();
   switch (true) {
-    case timeDiff < 0:
+    case timeDiff > 1:
       return "past";
       break;
-    case timeDiff > 0:
-      return "future";
-      break;
-    case timeDiff === 0:
+    case timeDiff > 0 && timeDiff <= 1:
       return "present";
+      break;
+    case timeDiff <= 0:
+      return "future";
       break;
   }
 }
 
-// Click Event handler of the save button assigned to each time block containing a callback function that sets the key and 
-// the data of the tasks object by capturing the text input value corresponding to the button's data-index attribute 
-// and then writes the object to local storage. 
+// Click Event handler of the save button assigned to each time block containing a callback function that sets the key and
+// the data of the tasks object by capturing the text input value corresponding to the button's data-index attribute
+// and then writes the object to local storage.
 
 $(".saveBtn").on("click", function() {
   key = $(this).attr("data-index");
