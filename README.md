@@ -12,7 +12,7 @@ This app uses moment.js library to track time of hourly tasks in a day planner. 
 - [Files](#Files)
 - [HTML](#HTML)
 - [Style](#Style)
-- [JavaScript](#Quiz-app)
+- [JavaScript](#JavaScript)
 
 
 ## App demo
