@@ -1,8 +1,8 @@
-# Code Quiz
+# Day planner
 
 ## Description
 
-This app uses moment.js library to track time of hourly tasks in a day planner. The app uses local storage for persistance. 
+This app uses moment.js library to track time of hourly tasks in a day planner. The app uses local storage for persistance.
 
 [Click here to the view the deployed website on github-pages](https://mohamedzakigithub.github.io/homework-week5-day-planner/)
 
@@ -13,7 +13,6 @@ This app uses moment.js library to track time of hourly tasks in a day planner. 
 - [HTML](#HTML)
 - [Style](#Style)
 - [JavaScript](#JavaScript)
-
 
 ## App demo
 
@@ -33,17 +32,21 @@ The html file has 9 divs representing the time block for each hour each in a sep
 <!-- The following section contains rows corresponding to the 9 hours of the working day, each containing columns 
 with time, text input and save button. data-index attribute is set to each text area and button to be used as an 
 identifier while selecting the element in jquery -->
-      
+
 <div class="row time-block no-gutters">
-  <div class="col-1"><P class="hour py-3">09:00 AM</P></div>
-  <div class="col-10"><textarea class="description w-100 h-100" data-index="09:00 AM"></textarea></div>
-  <div class="col-1 saveBtn " style="position: relative;" data-index="09:00 AM"><i  class="far fa-save"></i></div>
+  <div class="col-1"><p class="hour py-3">09:00 AM</p></div>
+  <div class="col-10">
+    <textarea class="description w-100 h-100" data-index="09:00 AM"></textarea>
+  </div>
+  <div class="col-1 saveBtn " style="position: relative;" data-index="09:00 AM">
+    <i class="far fa-save"></i>
+  </div>
 </div>
 ```
 
 ## Style
 
-The app uses Bootstrap 4 for styling as well as a custom style sheet to indivedually color code each time block according to its time state using the following classes. 
+The app uses Bootstrap 4 for styling as well as a custom style sheet to indivedually color code each time block according to its time state using the following classes.
 
 ```css
 .past {
@@ -64,7 +67,7 @@ The app uses Bootstrap 4 for styling as well as a custom style sheet to indivedu
 
 ## JavaScript
 
-The script.js file holds the app logic which is checking the current time using the moment.js library and compare it to each time block frame then set the class on this frame to color code the frame. The app has functionality to save the notes using local storage for persistance. 
+The script.js file holds the app logic which is checking the current time using the moment.js library and compare it to each time block frame then set the class on this frame to color code the frame. The app has functionality to save the notes using local storage for persistance.
 
 ```javascript
 // Select time blocks DOM elements using class (description).
@@ -93,18 +96,18 @@ renderTable();
 
 var interval = setInterval(renderTable, 60000);
 
-// The renderTable function is responsible for displaying the current date on the top of the page and setting the class 
+// The renderTable function is responsible for displaying the current date on the top of the page and setting the class
 // which formats the color of the time block representing it's current time state compared to the current time.
-// This is done by clearing the classes then adding the class which represents the time block status now from 
-// ( past, present and future). This is achieved by creating a moment.js object representing the current time then 
-// creating a new moment.js object representing the time assigned to the time block which is stored in the data-index 
+// This is done by clearing the classes then adding the class which represents the time block status now from
+// ( past, present and future). This is achieved by creating a moment.js object representing the current time then
+// creating a new moment.js object representing the time assigned to the time block which is stored in the data-index
 // attribute, then passing those two objects to the checkTime object that returns the class name to be added to the element.
 
 function renderTable() {
-  var currentDate = moment().format("dddd, MMMM Do") // Get current date. 
-  var currentTime = moment().format("hh:mm A") ; // Get current time.
+  var currentDate = moment().format("dddd, MMMM Do"); // Get current date.
+  var currentTime = moment().format("hh:mm A"); // Get current time.
   var TimeNow = moment();
-  $("#currentDay").text("Date: "+currentDate+" Time: "+currentTime); // Display current date and time.
+  $("#currentDay").text("Date: " + currentDate + " Time: " + currentTime); // Display current date and time.
   timeBlockElements.each(function(i) {
     var dataIndex = $(timeBlockElements[i]).attr("data-index");
     var timeBlock = moment(dataIndex, "HH-mm a");
@@ -143,5 +146,4 @@ $(".saveBtn").on("click", function() {
   tasks[key] = data;
   localStorage.setItem("tasks", JSON.stringify(tasks));
 });
-
 ```
