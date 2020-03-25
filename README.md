@@ -4,7 +4,7 @@
 
 This app uses moment.js library to track time of hourly tasks in a day planner. The app uses local storage for persistance.
 
-[Click here to the view the deployed website on github-pages](https://mohamedzakigithub.github.io/day-planner/)
+[Click here to view the deployed website on github-pages](https://mohamedzakigithub.github.io/day-planner/)
 
 ## Table of Contents
 
